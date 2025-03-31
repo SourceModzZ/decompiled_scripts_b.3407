@@ -38,7 +38,7 @@ void main() // Position - 0x0
 {
 	int num;
 	int num2;
-	var unk;
+	var entityCoords;
 
 	iLocal_2 = 1;
 	iLocal_3 = 134;
@@ -60,7 +60,7 @@ void main() // Position - 0x0
 	fLocal_30 = -0.0375f;
 	fLocal_31 = 0.17f;
 
-	if (unk_0x96CFB880BAC634CE(98))
+	if (PLAYER::HAS_FORCE_CLEANUP_OCCURRED(98))
 		func_15();
 
 	func_14();
@@ -70,31 +70,31 @@ void main() // Position - 0x0
 	{
 		SYSTEM::WAIT(500);
 		num2 = 0;
-		unk = { 0f, 0f, 0f };
+		entityCoords = { 0f, 0f, 0f };
 	
-		if (!unk_0x1C2F771CDC87A3A5(unk_0x4A8C381C258A124D(), 0))
-			unk = { unk_0xD1A6A821F5AC81DB(unk_0x4A8C381C258A124D(), 1) };
+		if (!ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID(), false))
+			entityCoords = { ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true) };
 	
 		while (num2 != 2)
 		{
-			if (func_13(&Global_33428[num /*7*/]))
+			if (func_13(&Global_33446[num /*7*/]))
 			{
-				if (func_12(num, unk))
+				if (func_12(num, entityCoords))
 				{
-					func_11(&Global_33428[num /*7*/], 2);
+					func_11(&Global_33446[num /*7*/], 2);
 				
-					if (Global_33428[num /*7*/].f_5 != 0)
+					if (Global_33446[num /*7*/].f_5 != 0)
 					{
-						if (unk_0xF40767E41852FB72(Global_33428[num /*7*/].f_5))
-							unk_0xE1440F5C29913E5D(Global_33428[num /*7*/].f_5, 1);
+						if (SCRIPT::IS_THREAD_ACTIVE(Global_33446[num /*7*/].f_5))
+							PLAYER::FORCE_CLEANUP_FOR_THREAD_WITH_THIS_ID(Global_33446[num /*7*/].f_5, 1);
 					
-						Global_33428[num /*7*/].f_5 = 0;
+						Global_33446[num /*7*/].f_5 = 0;
 					}
 				}
 			}
-			else if (!func_10(Global_33428[num /*7*/], 4))
+			else if (!func_10(Global_33446[num /*7*/], 4))
 			{
-				if (func_5(&Global_33428[num /*7*/], unk))
+				if (func_5(&Global_33446[num /*7*/], entityCoords))
 					func_1(num);
 			}
 		
@@ -112,7 +112,7 @@ void main() // Position - 0x0
 void func_1(int iParam0) // Position - 0x14A
 {
 	char* scriptName;
-	int num;
+	Hash scriptHash;
 	eStackSize stackSize;
 	BOOL flag;
 
@@ -123,32 +123,32 @@ void func_1(int iParam0) // Position - 0x14A
 	{
 		case 0:
 			scriptName = "re_ArmyBase";
-			num = joaat("re_armybase");
+			scriptHash = joaat("re_armybase");
 			break;
 	
 		case 1:
 			stackSize = MULTIPLAYER_MISSION;
 			scriptName = "golf_ai_foursome";
-			num = joaat("golf_ai_foursome");
+			scriptHash = joaat("golf_ai_foursome");
 			flag = false;
 			break;
 	
 		case 3:
 			scriptName = "re_Prison";
-			num = joaat("re_prison");
+			scriptHash = joaat("re_prison");
 			break;
 	
 		case 2:
 			stackSize = MULTIPLAYER_MISSION;
 			scriptName = "golf_ai_foursome_putting";
-			num = joaat("golf_ai_foursome_putting");
+			scriptHash = joaat("golf_ai_foursome_putting");
 			flag = false;
 			break;
 	
 		case 4:
 			stackSize = FRIEND;
 			scriptName = "stripclub";
-			num = joaat("stripclub");
+			scriptHash = joaat("stripclub");
 			flag = false;
 			break;
 	}
@@ -156,22 +156,22 @@ void func_1(int iParam0) // Position - 0x14A
 	if (!flag && func_3())
 		return;
 
-	if (unk_0x09112CCF7824FE38(scriptName) != 0)
+	if (HUD::GET_LENGTH_OF_LITERAL_STRING(scriptName) != 0)
 	{
-		if (unk_0x486FF5D06E9659F1(num) == 0)
+		if (SCRIPT::GET_NUMBER_OF_THREADS_RUNNING_THE_SCRIPT_WITH_THIS_HASH(scriptHash) == 0)
 		{
-			unk_0x97A5024CE91641F1(scriptName);
+			SCRIPT::REQUEST_SCRIPT(scriptName);
 		
-			while (!unk_0xA6E4F7A73ABC4A76(scriptName))
+			while (!SCRIPT::HAS_SCRIPT_LOADED(scriptName))
 			{
 				SYSTEM::WAIT(0);
 			}
 		
-			Global_33428[iParam0 /*7*/].f_5 = SYSTEM::START_NEW_SCRIPT(scriptName, stackSize);
-			unk_0xFD49725F3FE7EE13(scriptName);
+			Global_33446[iParam0 /*7*/].f_5 = SYSTEM::START_NEW_SCRIPT(scriptName, stackSize);
+			SCRIPT::SET_SCRIPT_AS_NO_LONGER_NEEDED(scriptName);
 		
-			if (Global_33428[iParam0 /*7*/].f_5 != 0)
-				func_2(&Global_33428[iParam0 /*7*/], 2);
+			if (Global_33446[iParam0 /*7*/].f_5 != 0)
+				func_2(&Global_33446[iParam0 /*7*/], 2);
 		}
 	}
 
@@ -194,7 +194,7 @@ BOOL func_3() // Position - 0x260
 
 int func_4() // Position - 0x275
 {
-	return Global_33087;
+	return Global_33105;
 }
 
 BOOL func_5(int iParam0, Vector3 vParam1, var uParam2, var uParam3) // Position - 0x280
@@ -206,8 +206,8 @@ BOOL func_5(int iParam0, Vector3 vParam1, var uParam2, var uParam3) // Position 
 	if (SYSTEM::VDIST2(vParam1, iParam0->f_2) > iParam0->f_1)
 		return false;
 
-	if (!unk_0x4FAFF4BCB7633475(unk_0x4A8C381C258A124D()))
-		if (unk_0x5105BE70DEF1F5FB(unk_0x4A8C381C258A124D(), -2080.115f, 3292.193f, -11.667f, -2112.049f, 3224.331f, 11.667f, 115f, 1, 0, 0))
+	if (!PED::IS_PED_INJURED(PLAYER::PLAYER_PED_ID()))
+		if (ENTITY::IS_ENTITY_IN_ANGLED_AREA(PLAYER::PLAYER_PED_ID(), -2080.115f, 3292.193f, -11.667f, -2112.049f, 3224.331f, 11.667f, 115f, true, false, 0))
 			return false;
 
 	return true;
@@ -215,7 +215,7 @@ BOOL func_5(int iParam0, Vector3 vParam1, var uParam2, var uParam3) // Position 
 
 BOOL func_6(int iParam0) // Position - 0x306
 {
-	if (Global_44181 == 15)
+	if (Global_44199 == 15)
 		return false;
 
 	if (_CAN_ENTER_FREEROAM_STATE(iParam0))
@@ -226,7 +226,7 @@ BOOL func_6(int iParam0) // Position - 0x306
 
 BOOL _CAN_ENTER_FREEROAM_STATE(int iParam0) // Position - 0x328
 {
-	return func_8(iParam0, Global_44181);
+	return func_8(iParam0, Global_44199);
 }
 
 BOOL func_8(int iParam0, int iParam1) // Position - 0x339
@@ -355,7 +355,7 @@ BOOL func_8(int iParam0, int iParam1) // Position - 0x339
 
 BOOL func_9() // Position - 0x51A
 {
-	if (Global_44181 == 15)
+	if (Global_44199 == 15)
 		return false;
 
 	return true;
@@ -376,21 +376,21 @@ BOOL func_12(int iParam0, Vector3 vParam1, var uParam2, var uParam3) // Position
 {
 	vParam1.f_2 = 0f;
 
-	if (!unk_0xF40767E41852FB72(Global_33428[iParam0 /*7*/].f_5))
+	if (!SCRIPT::IS_THREAD_ACTIVE(Global_33446[iParam0 /*7*/].f_5))
 		return true;
 
-	if (func_10(Global_33428[iParam0 /*7*/], 4))
+	if (func_10(Global_33446[iParam0 /*7*/], 4))
 		return true;
 
 	if (func_9() && !func_6(6))
-		if (!func_10(Global_33428[iParam0 /*7*/], 1))
+		if (!func_10(Global_33446[iParam0 /*7*/], 1))
 			if (iParam0 == 1 || iParam0 == 2)
-				if (unk_0x486FF5D06E9659F1(joaat("golf")) == 0)
+				if (SCRIPT::GET_NUMBER_OF_THREADS_RUNNING_THE_SCRIPT_WITH_THIS_HASH(joaat("golf")) == 0)
 					return true;
 			else
 				return true;
 
-	if (SYSTEM::VDIST2(Global_33428[iParam0 /*7*/].f_2, vParam1) > Global_33428[iParam0 /*7*/].f_1 + 400f)
+	if (SYSTEM::VDIST2(Global_33446[iParam0 /*7*/].f_2, vParam1) > Global_33446[iParam0 /*7*/].f_1 + 400f)
 		return true;
 
 	return false;
@@ -405,30 +405,30 @@ void func_14() // Position - 0x60E
 {
 	int i;
 
-	Global_33428[0 /*7*/].f_2 = { -2189.5447f, 3129.6125f, 0f };
-	Global_33428[0 /*7*/].f_1 = 1000f * 1000f;
-	Global_33428[0 /*7*/] = 0;
-	Global_33428[0 /*7*/].f_5 = 0;
-	Global_33428[1 /*7*/].f_2 = { -1172.8221f, 66.5235f, 0f };
-	Global_33428[1 /*7*/].f_1 = 300f * 300f;
-	Global_33428[1 /*7*/] = 0;
-	Global_33428[1 /*7*/].f_5 = 0;
-	Global_33428[3 /*7*/].f_2 = { 1692.1469f, 2562.3127f, 0f };
-	Global_33428[3 /*7*/].f_1 = 300f * 300f;
-	Global_33428[3 /*7*/] = 0;
-	Global_33428[3 /*7*/].f_5 = 0;
-	Global_33428[2 /*7*/].f_2 = { -1329.6797f, 60.3478f, 0f };
-	Global_33428[2 /*7*/].f_1 = 250f * 250f;
-	Global_33428[2 /*7*/] = 0;
-	Global_33428[2 /*7*/].f_5 = 0;
-	Global_33428[4 /*7*/].f_2 = { 114.64f, -1290.34f, 0f };
-	Global_33428[4 /*7*/].f_1 = 100f * 100f;
-	Global_33428[4 /*7*/] = 1;
-	Global_33428[4 /*7*/].f_5 = 0;
+	Global_33446[0 /*7*/].f_2 = { -2189.5447f, 3129.6125f, 0f };
+	Global_33446[0 /*7*/].f_1 = 1000f * 1000f;
+	Global_33446[0 /*7*/] = 0;
+	Global_33446[0 /*7*/].f_5 = 0;
+	Global_33446[1 /*7*/].f_2 = { -1172.8221f, 66.5235f, 0f };
+	Global_33446[1 /*7*/].f_1 = 300f * 300f;
+	Global_33446[1 /*7*/] = 0;
+	Global_33446[1 /*7*/].f_5 = 0;
+	Global_33446[3 /*7*/].f_2 = { 1692.1469f, 2562.3127f, 0f };
+	Global_33446[3 /*7*/].f_1 = 300f * 300f;
+	Global_33446[3 /*7*/] = 0;
+	Global_33446[3 /*7*/].f_5 = 0;
+	Global_33446[2 /*7*/].f_2 = { -1329.6797f, 60.3478f, 0f };
+	Global_33446[2 /*7*/].f_1 = 250f * 250f;
+	Global_33446[2 /*7*/] = 0;
+	Global_33446[2 /*7*/].f_5 = 0;
+	Global_33446[4 /*7*/].f_2 = { 114.64f, -1290.34f, 0f };
+	Global_33446[4 /*7*/].f_1 = 100f * 100f;
+	Global_33446[4 /*7*/] = 1;
+	Global_33446[4 /*7*/].f_5 = 0;
 
 	for (i = 0; i <= 5 - 1; i = i + 1)
 	{
-		Global_33428[i /*7*/].f_2.f_2 = 0f;
+		Global_33446[i /*7*/].f_2.f_2 = 0f;
 	}
 
 	return;
@@ -436,7 +436,7 @@ void func_14() // Position - 0x60E
 
 void func_15() // Position - 0x74E
 {
-	unk_0xBBC29EBE6E1A48FA();
+	SCRIPT::TERMINATE_THIS_THREAD();
 	return;
 }
 

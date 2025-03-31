@@ -19,7 +19,7 @@
 
 void main() // Position - 0x0
 {
-	int num;
+	int gameTimer;
 	BOOL flag;
 
 	iLocal_2 = 1;
@@ -34,48 +34,48 @@ void main() // Position - 0x0
 	iLocal_11 = 12;
 	fLocal_12 = 0.001f;
 	iLocal_15 = -1;
-	num = -1;
+	gameTimer = -1;
 	flag = false;
 
-	if (unk_0x96CFB880BAC634CE(3))
+	if (PLAYER::HAS_FORCE_CLEANUP_OCCURRED(3))
 		func_5();
 
 	while (true)
 	{
 		if (!flag)
 		{
-			switch (_GET_PLAYER_CHARACTER_FROM_PED(unk_0x4A8C381C258A124D()))
+			switch (_GET_PLAYER_CHARACTER_FROM_PED(PLAYER::PLAYER_PED_ID()))
 			{
 				case CHAR_FRANKLIN:
-					if (unk_0xB3157976738FC0C0("MISSION_COMPLETE_FRANKLIN_SMALL", 0))
+					if (AUDIO::LOAD_STREAM("MISSION_COMPLETE_FRANKLIN_SMALL", 0))
 					{
-						unk_0x64B3EF30EAA9FBA3();
+						AUDIO::PLAY_STREAM_FRONTEND();
 						flag = true;
 					}
 					break;
 			
 				case CHAR_TREVOR:
-					if (unk_0xB3157976738FC0C0("MISSION_COMPLETE_TREVOR_SMALL", 0))
+					if (AUDIO::LOAD_STREAM("MISSION_COMPLETE_TREVOR_SMALL", 0))
 					{
-						unk_0x64B3EF30EAA9FBA3();
+						AUDIO::PLAY_STREAM_FRONTEND();
 						flag = true;
 					}
 					break;
 			
 				default:
-					if (unk_0xB3157976738FC0C0("MISSION_COMPLETE_MICHAEL_SMALL", 0))
+					if (AUDIO::LOAD_STREAM("MISSION_COMPLETE_MICHAEL_SMALL", 0))
 					{
-						unk_0x64B3EF30EAA9FBA3();
+						AUDIO::PLAY_STREAM_FRONTEND();
 						flag = true;
 					}
 					break;
 			}
 		}
-		else if (num == -1)
+		else if (gameTimer == -1)
 		{
-			num = unk_0x1DD05E817C89C737();
+			gameTimer = MISC::GET_GAME_TIMER();
 		}
-		else if (unk_0x1DD05E817C89C737() > num + 8000)
+		else if (MISC::GET_GAME_TIMER() > gameTimer + 8000)
 		{
 			func_5();
 		}
@@ -86,18 +86,18 @@ void main() // Position - 0x0
 	return;
 }
 
-eCharacter _GET_PLAYER_CHARACTER_FROM_PED(var uParam0) // Position - 0xD2
+eCharacter _GET_PLAYER_CHARACTER_FROM_PED(Ped pedParam0) // Position - 0xD2
 {
 	eCharacter i;
-	int num;
+	Hash entityModel;
 
-	if (unk_0xFC8BFE4B41177C22(uParam0))
+	if (ENTITY::DOES_ENTITY_EXIST(pedParam0))
 	{
-		num = unk_0x4B423FAA24E8ABF0(uParam0);
+		entityModel = ENTITY::GET_ENTITY_MODEL(pedParam0);
 	
 		for (i = CHAR_MICHAEL; i <= CHAR_TREVOR; i = i + 1)
 		{
-			if (_GET_CHARACTER_MODEL(i) == num)
+			if (_GET_CHARACTER_MODEL(i) == entityModel)
 				return i;
 		}
 	}
@@ -105,7 +105,7 @@ eCharacter _GET_PLAYER_CHARACTER_FROM_PED(var uParam0) // Position - 0xD2
 	return _CHAR_NULL;
 }
 
-int _GET_CHARACTER_MODEL(eCharacter character) // Position - 0x10F
+Hash _GET_CHARACTER_MODEL(eCharacter character) // Position - 0x10F
 {
 	if (func_4(character))
 		return func_3(character);
@@ -115,7 +115,7 @@ int _GET_CHARACTER_MODEL(eCharacter character) // Position - 0x10F
 	return 0;
 }
 
-int func_3(eCharacter echParam0) // Position - 0x134
+Hash func_3(eCharacter echParam0) // Position - 0x134
 {
 	return Global_2201[echParam0 /*29*/];
 }
@@ -127,8 +127,8 @@ BOOL func_4(eCharacter echParam0) // Position - 0x143
 
 void func_5() // Position - 0x14F
 {
-	unk_0x22A76EDE2316E9A1();
-	unk_0xBBC29EBE6E1A48FA();
+	AUDIO::STOP_STREAM();
+	SCRIPT::TERMINATE_THIS_THREAD();
 	return;
 }
 

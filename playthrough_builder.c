@@ -1,7 +1,7 @@
 void main() // Position - 0x0
 {
-	if (unk_0x96CFB880BAC634CE(2))
-		unk_0xBBC29EBE6E1A48FA();
+	if (PLAYER::HAS_FORCE_CLEANUP_OCCURRED(2))
+		SCRIPT::TERMINATE_THIS_THREAD();
 
 	return;
 }

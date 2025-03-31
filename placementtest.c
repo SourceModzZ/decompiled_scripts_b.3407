@@ -43,12 +43,12 @@
 	var uLocal_41 = 0;
 	var uLocal_42 = 0;
 	int iLocal_43 = 0;
-	var uLocal_44 = 0;
+	int iLocal_44 = 0;
 #endregion
 
 void main() // Position - 0x0
 {
-	var unk;
+	int scaleformHandle;
 
 	iLocal_2 = 1;
 	iLocal_3 = 134;
@@ -74,34 +74,34 @@ void main() // Position - 0x0
 	iLocal_38 = 65;
 	iLocal_39 = 49;
 	iLocal_40 = 64;
-	unk = func_13();
+	scaleformHandle = func_13();
 
-	if (unk_0x96CFB880BAC634CE(3))
-		unk_0xBBC29EBE6E1A48FA();
+	if (PLAYER::HAS_FORCE_CLEANUP_OCCURRED(3))
+		SCRIPT::TERMINATE_THIS_THREAD();
 
 	while (true)
 	{
-		if (unk_0xA0C7B98BCF1EEF9E(unk))
+		if (GRAPHICS::HAS_SCALEFORM_MOVIE_LOADED(scaleformHandle))
 		{
 			switch (iLocal_43)
 			{
 				case 0:
-					func_11(&unk, "OFFR_BLIP_R5", 255, 0, 255, 255, false);
-					func_10(&unk);
-					uLocal_44 = unk_0x1DD05E817C89C737();
+					func_11(&scaleformHandle, "OFFR_BLIP_R5", 255, 0, 255, 255, false);
+					func_10(&scaleformHandle);
+					iLocal_44 = MISC::GET_GAME_TIMER();
 					iLocal_43 = 1;
 					break;
 			
 				case 1:
-					if (unk_0x1DD05E817C89C737() - uLocal_44 > 3000)
+					if (MISC::GET_GAME_TIMER() - iLocal_44 > 3000)
 					{
-						func_9(&unk);
+						func_9(&scaleformHandle);
 						iLocal_43 = 2;
 					}
 					break;
 			}
 		
-			func_1(&unk, false);
+			func_1(&scaleformHandle, false);
 		}
 	
 		SYSTEM::WAIT(0);
@@ -115,12 +115,12 @@ BOOL func_1(var uParam0, BOOL bParam1) // Position - 0xEF
 	if (!func_8(&(uParam0->f_2)))
 		func_6(&(uParam0->f_2));
 
-	unk_0x4EB223432F8FA0A0(14);
-	unk_0xA4F67CEB594AE064(1);
-	unk_0x6D16B99FEB0AFFF1(*uParam0, 0.5f, 0.5f, 1f, 1f, 255, 255, 255, 0, 0);
+	HUD::HIDE_HUD_COMPONENT_THIS_FRAME(HUD_RETICLE);
+	GRAPHICS::SET_SCRIPT_GFX_DRAW_ORDER(1);
+	GRAPHICS::DRAW_SCALEFORM_MOVIE(*uParam0, 0.5f, 0.5f, 1f, 1f, 255, 255, 255, 0, 0);
 
 	if (bParam1)
-		if (unk_0x6D05C5731A838CB3(2, 201))
+		if (PAD::IS_CONTROL_PRESSED(FRONTEND_CONTROL, INPUT_FRONTEND_ACCEPT))
 			return false;
 
 	if (uParam0->f_1 == -1)
@@ -158,26 +158,26 @@ float func_4(BOOL bParam0) // Position - 0x1C7
 {
 	float num;
 	float num2;
-	int value;
+	int networkTime;
 	float num3;
 	float num4;
 
 	if (bParam0)
 	{
-		num = SYSTEM::TO_FLOAT(unk_0x1DD05E817C89C737());
+		num = SYSTEM::TO_FLOAT(MISC::GET_GAME_TIMER());
 		num2 = num / 1000f;
 		return num2;
 	}
 
-	if (unk_0x76CD105BCAC6EB9F())
+	if (NETWORK::NETWORK_IS_GAME_IN_PROGRESS())
 	{
-		value = unk_0x7E3F74F641EE6B27();
-		num3 = SYSTEM::TO_FLOAT(value);
+		networkTime = NETWORK::GET_NETWORK_TIME();
+		num3 = SYSTEM::TO_FLOAT(networkTime);
 		num4 = num3 / 1000f;
 		return num4;
 	}
 
-	return SYSTEM::TO_FLOAT(unk_0x1DD05E817C89C737()) / 1000f;
+	return SYSTEM::TO_FLOAT(MISC::GET_GAME_TIMER()) / 1000f;
 }
 
 BOOL func_5(var uParam0) // Position - 0x21F
@@ -185,18 +185,18 @@ BOOL func_5(var uParam0) // Position - 0x21F
 	return IS_BIT_SET(*uParam0, 2);
 }
 
-void func_6(var uParam0) // Position - 0x22C
+void func_6(int* piParam0) // Position - 0x22C
 {
-	func_7(uParam0, 0f);
+	func_7(piParam0, 0f);
 	return;
 }
 
-void func_7(var uParam0, float fParam1) // Position - 0x23B
+void func_7(int* piParam0, float fParam1) // Position - 0x23B
 {
-	uParam0->f_1 = func_4(IS_BIT_SET(*uParam0, 4)) - fParam1;
-	unk_0x0B0C9A0F9AAEB7F0(uParam0, 1);
-	unk_0x8744D2E3FC95740E(uParam0, 2);
-	uParam0->f_2 = 0f;
+	piParam0->f_1 = func_4(IS_BIT_SET(*piParam0, 4)) - fParam1;
+	MISC::SET_BIT(piParam0, 1);
+	MISC::CLEAR_BIT(piParam0, 2);
+	piParam0->f_2 = 0f;
 	return;
 }
 
@@ -209,34 +209,34 @@ void func_9(var uParam0) // Position - 0x273
 {
 	uParam0->f_1 = 300;
 	func_6(&(uParam0->f_2));
-	unk_0x88F483FBD433696A(*uParam0, "SPLASH_TEXT_TRANSITION_OUT");
-	unk_0x330108B080A2132F(300);
-	unk_0xE6B753D52F4CA222();
+	GRAPHICS::BEGIN_SCALEFORM_MOVIE_METHOD(*uParam0, "SPLASH_TEXT_TRANSITION_OUT");
+	GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_INT(300);
+	GRAPHICS::END_SCALEFORM_MOVIE_METHOD();
 	return;
 }
 
 void func_10(var uParam0) // Position - 0x2A0
 {
-	unk_0x88F483FBD433696A(*uParam0, "SPLASH_TEXT_TRANSITION_IN");
-	unk_0xE6B753D52F4CA222();
+	GRAPHICS::BEGIN_SCALEFORM_MOVIE_METHOD(*uParam0, "SPLASH_TEXT_TRANSITION_IN");
+	GRAPHICS::END_SCALEFORM_MOVIE_METHOD();
 	return;
 }
 
 void func_11(var uParam0, char* sParam1, int iParam2, int iParam3, int iParam4, int iParam5, BOOL bParam6) // Position - 0x2B7
 {
 	uParam0->f_1 = -1;
-	unk_0x88F483FBD433696A(*uParam0, "SPLASH_TEXT_LABEL");
+	GRAPHICS::BEGIN_SCALEFORM_MOVIE_METHOD(*uParam0, "SPLASH_TEXT_LABEL");
 	func_12(sParam1);
-	unk_0x330108B080A2132F(iParam2);
-	unk_0x330108B080A2132F(iParam3);
-	unk_0x330108B080A2132F(iParam4);
-	unk_0x330108B080A2132F(iParam5);
-	unk_0xE6B753D52F4CA222();
+	GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_INT(iParam2);
+	GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_INT(iParam3);
+	GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_INT(iParam4);
+	GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_INT(iParam5);
+	GRAPHICS::END_SCALEFORM_MOVIE_METHOD();
 
 	if (bParam6)
 	{
-		unk_0x88F483FBD433696A(*uParam0, "SPLASH_TEXT_TRANSITION_IN");
-		unk_0xE6B753D52F4CA222();
+		GRAPHICS::BEGIN_SCALEFORM_MOVIE_METHOD(*uParam0, "SPLASH_TEXT_TRANSITION_IN");
+		GRAPHICS::END_SCALEFORM_MOVIE_METHOD();
 	}
 
 	return;
@@ -244,13 +244,13 @@ void func_11(var uParam0, char* sParam1, int iParam2, int iParam3, int iParam4, 
 
 void func_12(char* sParam0) // Position - 0x305
 {
-	unk_0x882AEFD55B8D51FB(sParam0);
-	unk_0xCFAD3D478C87321A();
+	GRAPHICS::BEGIN_TEXT_COMMAND_SCALEFORM_STRING(sParam0);
+	GRAPHICS::END_TEXT_COMMAND_SCALEFORM_STRING();
 	return;
 }
 
-var func_13() // Position - 0x317
+int func_13() // Position - 0x317
 {
-	return unk_0x8DE4F68A9728925E("SPLASH_TEXT");
+	return GRAPHICS::REQUEST_SCALEFORM_MOVIE("SPLASH_TEXT");
 }
 

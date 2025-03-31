@@ -59,19 +59,19 @@ void main() // Position - 0x0
 	iLocal_2 = -1;
 	unk = { uScriptParam_0.f_1[0 /*3*/] };
 
-	if (unk_0x96CFB880BAC634CE(19))
+	if (PLAYER::HAS_FORCE_CLEANUP_OCCURRED(19))
 		func_26();
 
 	func_24(unk);
 	bLocal_24 = func_4();
-	uLocal_25 = { unk_0xD1A6A821F5AC81DB(unk_0x4A8C381C258A124D(), 0) };
+	uLocal_25 = { ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), false) };
 	func_1();
 
 	while (true)
 	{
 		SYSTEM::WAIT(0);
 	
-		if (!unk_0x173751E886F8E9AB())
+		if (!BRAIN::IS_WORLD_POINT_WITHIN_BRAIN_ACTIVATION_RANGE())
 			func_26();
 	}
 
@@ -81,54 +81,54 @@ void main() // Position - 0x0
 void func_1() // Position - 0x5C
 {
 	int i;
-	int num;
+	Hash pickupHash;
 	Vector3 vector;
-	var unk3;
-	int num2;
-	var unk6;
+	Vector3 vector2;
+	int address;
+	int value;
 
 	i = 0;
 
 	for (i = 0; i < 20; i = i + 1)
 	{
-		if (func_3(i, &num, &vector, &unk3, &unk6))
+		if (func_3(i, &pickupHash, &vector, &vector2, &value))
 		{
-			if (func_2(unk3, 0f, 0f, 0f, false))
+			if (func_2(vector2, 0f, 0f, 0f, false))
 			{
-				num2 = 0;
-				unk_0x0B0C9A0F9AAEB7F0(&num2, 1);
-				unk_0x0B0C9A0F9AAEB7F0(&num2, 4);
-				unk_0x0B0C9A0F9AAEB7F0(&num2, 3);
+				address = 0;
+				MISC::SET_BIT(&address, 1);
+				MISC::SET_BIT(&address, 4);
+				MISC::SET_BIT(&address, 3);
 			
-				if (num == joaat("PICKUP_MONEY_CASE"))
+				if (pickupHash == joaat("PICKUP_MONEY_CASE"))
 					if (bLocal_24)
-						uLocal_3[i] = unk_0x8D4CAF9A056EA9E4(num, vector, num2, unk6, 1, 0);
+						uLocal_3[i] = OBJECT::CREATE_PICKUP(pickupHash, vector, address, value, true, 0);
 				else if (SYSTEM::VDIST2(vector, uLocal_25) > 400f)
-					if (num == joaat("PICKUP_ARMOUR_STANDARD"))
-						uLocal_3[i] = unk_0x8D4CAF9A056EA9E4(num, vector, num2, unk6, 1, 0);
-					else if (num == joaat("PICKUP_WEAPON_GRENADELAUNCHER") || num == joaat("PICKUP_WEAPON_RPG") || num == joaat("PICKUP_WEAPON_MG"))
+					if (pickupHash == joaat("PICKUP_ARMOUR_STANDARD"))
+						uLocal_3[i] = OBJECT::CREATE_PICKUP(pickupHash, vector, address, value, true, 0);
+					else if (pickupHash == joaat("PICKUP_WEAPON_GRENADELAUNCHER") || pickupHash == joaat("PICKUP_WEAPON_RPG") || pickupHash == joaat("PICKUP_WEAPON_MG"))
 						if (bLocal_24)
-							uLocal_3[i] = unk_0x8D4CAF9A056EA9E4(num, vector, num2, -1, 1, 0);
+							uLocal_3[i] = OBJECT::CREATE_PICKUP(pickupHash, vector, address, -1, true, 0);
 					else
-						uLocal_3[i] = unk_0x8D4CAF9A056EA9E4(num, vector, num2, -1, 1, 0);
+						uLocal_3[i] = OBJECT::CREATE_PICKUP(pickupHash, vector, address, -1, true, 0);
 			}
 			else
 			{
-				num2 = 0;
-				unk_0x0B0C9A0F9AAEB7F0(&num2, 1);
-				unk_0x0B0C9A0F9AAEB7F0(&num2, 4);
+				address = 0;
+				MISC::SET_BIT(&address, 1);
+				MISC::SET_BIT(&address, 4);
 			
-				if (num == joaat("PICKUP_MONEY_CASE"))
+				if (pickupHash == joaat("PICKUP_MONEY_CASE"))
 					if (bLocal_24)
-						uLocal_3[i] = unk_0x6FCBED6282FF5DA5(num, vector, unk3, num2, 10000, 2, 1, 0);
+						uLocal_3[i] = OBJECT::CREATE_PICKUP_ROTATE(pickupHash, vector, vector2, address, 10000, 2, true, 0);
 				else if (SYSTEM::VDIST2(vector, uLocal_25) > 400f)
-					if (num == joaat("PICKUP_ARMOUR_STANDARD"))
-						uLocal_3[i] = unk_0x6FCBED6282FF5DA5(num, vector, unk3, num2, -1, 2, 1, 0);
-					else if (num == joaat("PICKUP_WEAPON_GRENADELAUNCHER") || num == joaat("PICKUP_WEAPON_RPG") || num == joaat("PICKUP_WEAPON_MG"))
+					if (pickupHash == joaat("PICKUP_ARMOUR_STANDARD"))
+						uLocal_3[i] = OBJECT::CREATE_PICKUP_ROTATE(pickupHash, vector, vector2, address, -1, 2, true, 0);
+					else if (pickupHash == joaat("PICKUP_WEAPON_GRENADELAUNCHER") || pickupHash == joaat("PICKUP_WEAPON_RPG") || pickupHash == joaat("PICKUP_WEAPON_MG"))
 						if (bLocal_24)
-							uLocal_3[i] = unk_0x6FCBED6282FF5DA5(num, vector, unk3, num2, -1, 2, 1, 0);
+							uLocal_3[i] = OBJECT::CREATE_PICKUP_ROTATE(pickupHash, vector, vector2, address, -1, 2, true, 0);
 					else
-						uLocal_3[i] = unk_0x6FCBED6282FF5DA5(num, vector, unk3, num2, -1, 2, 1, 0);
+						uLocal_3[i] = OBJECT::CREATE_PICKUP_ROTATE(pickupHash, vector, vector2, address, -1, 2, true, 0);
 			}
 		}
 	}
@@ -964,17 +964,17 @@ BOOL func_3(int iParam0, var uParam1, var uParam2, var uParam3, var uParam4) // 
 
 BOOL func_4() // Position - 0x17D8
 {
-	if (Global_2698143 == -15)
+	if (Global_2698161 == -15)
 	{
-		Global_2698143 = func_23();
-		func_15(&Global_2698143, 0, 0, 0, 1, 0, 0);
+		Global_2698161 = func_23();
+		func_15(&Global_2698161, 0, 0, 0, 1, 0, 0);
 		return 1;
 	}
 
-	if (func_5(func_23(), Global_2698143))
+	if (func_5(func_23(), Global_2698161))
 	{
-		Global_2698143 = func_23();
-		func_15(&Global_2698143, 0, 0, 0, 1, 0, 0);
+		Global_2698161 = func_23();
+		func_15(&Global_2698161, 0, 0, 0, 1, 0, 0);
 		return 1;
 	}
 
@@ -1328,12 +1328,12 @@ int func_23() // Position - 0x1EBE
 {
 	var unk;
 
-	func_22(&unk, unk_0x4BA5A16068183C5E());
-	func_21(&unk, unk_0x18E502A71E28968C());
-	func_20(&unk, unk_0x5295501D0862870D());
-	func_18(&unk, unk_0xB12880C92EA6EE15());
-	func_19(&unk, unk_0x8825A6E0A30BDCB8());
-	func_17(&unk, unk_0x7598FE4545010A75());
+	func_22(&unk, CLOCK::GET_CLOCK_SECONDS());
+	func_21(&unk, CLOCK::GET_CLOCK_MINUTES());
+	func_20(&unk, CLOCK::GET_CLOCK_HOURS());
+	func_18(&unk, CLOCK::GET_CLOCK_DAY_OF_MONTH());
+	func_19(&unk, CLOCK::GET_CLOCK_MONTH());
+	func_17(&unk, CLOCK::GET_CLOCK_YEAR());
 	return unk;
 }
 
@@ -1374,12 +1374,12 @@ BOOL func_25(float fParam0, var uParam1, var uParam2, var uParam3, var uParam4, 
 		iParam6 = 0f;
 
 	if (!bParam7)
-		if (unk_0x1D5CD3EAAA7422B0(fParam0 - uParam3) <= iParam6)
-			if (unk_0x1D5CD3EAAA7422B0(fParam0.f_1 - uParam3.f_1) <= iParam6)
-				if (unk_0x1D5CD3EAAA7422B0(fParam0.f_2 - uParam3.f_2) <= iParam6)
+		if (MISC::ABSF(fParam0 - uParam3) <= iParam6)
+			if (MISC::ABSF(fParam0.f_1 - uParam3.f_1) <= iParam6)
+				if (MISC::ABSF(fParam0.f_2 - uParam3.f_2) <= iParam6)
 					return true;
-	else if (unk_0x1D5CD3EAAA7422B0(fParam0 - uParam3) <= iParam6)
-		if (unk_0x1D5CD3EAAA7422B0(fParam0.f_1 - uParam3.f_1) <= iParam6)
+	else if (MISC::ABSF(fParam0 - uParam3) <= iParam6)
+		if (MISC::ABSF(fParam0.f_1 - uParam3.f_1) <= iParam6)
 			return true;
 
 	return false;
@@ -1388,7 +1388,7 @@ BOOL func_25(float fParam0, var uParam1, var uParam2, var uParam3, var uParam4, 
 void func_26() // Position - 0x20CE
 {
 	func_27();
-	unk_0xBBC29EBE6E1A48FA();
+	SCRIPT::TERMINATE_THIS_THREAD();
 	return;
 }
 
@@ -1398,8 +1398,8 @@ void func_27() // Position - 0x20DE
 
 	for (i = 0; i < 20; i = i + 1)
 	{
-		if (unk_0xB0E14182FAD64944(uLocal_3[i]))
-			unk_0xDDFB0941A19702BE(uLocal_3[i]);
+		if (OBJECT::DOES_PICKUP_EXIST(uLocal_3[i]))
+			OBJECT::REMOVE_PICKUP(uLocal_3[i]);
 	}
 
 	return;

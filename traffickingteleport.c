@@ -46,7 +46,7 @@
 
 void main() // Position - 0x0
 {
-	var unk;
+	Ped playerPed;
 
 	iLocal_2 = 1;
 	iLocal_3 = 134;
@@ -72,12 +72,12 @@ void main() // Position - 0x0
 	iLocal_38 = 65;
 	iLocal_39 = 49;
 	iLocal_40 = 64;
-	unk = unk_0x56E414973C2A8C0E(unk_0xB6B621402486C3E4());
+	playerPed = PLAYER::GET_PLAYER_PED(PLAYER::GET_PLAYER_INDEX());
 
-	if (!unk_0x1C2F771CDC87A3A5(unk, 0))
+	if (!ENTITY::IS_ENTITY_DEAD(playerPed, false))
 	{
-		unk_0xB2BD5837A8D3CEDA(unk, 2119.1587f, 4813.5225f, 40.2223f, 1, 0, 0, 1);
-		unk_0x5C96CEA06531AB03(unk, 225.2837f);
+		ENTITY::SET_ENTITY_COORDS(playerPed, 2119.1587f, 4813.5225f, 40.2223f, true, false, false, true);
+		ENTITY::SET_ENTITY_HEADING(playerPed, 225.2837f);
 	}
 
 	func_1(19, 0);
@@ -89,8 +89,8 @@ void func_1(int iParam0, int iParam1) // Position - 0xB1
 	if (iParam0 == 235 || iParam0 == 0)
 		return;
 
-	Global_114135.f_8617[iParam0] = 1;
-	Global_114135.f_8617.f_236[iParam0] = unk_0x1DD05E817C89C737() + iParam1;
+	Global_114162.f_8617[iParam0] = 1;
+	Global_114162.f_8617.f_236[iParam0] = MISC::GET_GAME_TIMER() + iParam1;
 	return;
 }
 
